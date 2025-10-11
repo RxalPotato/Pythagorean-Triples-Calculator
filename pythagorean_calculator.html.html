@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pythagorean Triples Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        header h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        nav button {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        nav button:hover {
+            background: #2980b9;
+            border-color: #2980b9;
+        }
+
+        nav button.active {
+            background: #2c3e50;
+            border-color: #2c3e50;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+        }
+
+        .hero h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .form-group input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .form-group input[type="number"]:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .triple-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .results {
+            margin-top: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .result-summary {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #3498db;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .verification {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .verification.valid {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .verification.invalid {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .calculation {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .method-result {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .verification-result {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .verification-result.valid {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+
+        .verification-result.invalid {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            display: none;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .more-results, .no-results {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .info-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+
+        .info-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .info-section ul {
+            margin-left: 20px;
+        }
+
+        .info-section li {
+            margin-bottom: 10px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            header h1 {
+                font-size: 2em;
+            }
+            
+            nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav button {
+                width: 200px;
+                text-align: center;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .triple-inputs {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Pythagorean Triples Calculator</h1>
+            <nav>
+                <button class="nav-btn active" data-tab="home">Home</button>
+                <button class="nav-btn" data-tab="find">Find Triples</button>
+                <button class="nav-btn" data-tab="generate">Generate Primitives</button>
+                <button class="nav-btn" data-tab="check">Check Triple</button>
+                <button class="nav-btn" data-tab="compare">Compare Methods</button>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Home Tab -->
+            <div id="home" class="tab-content active">
+                <div class="hero">
+                    <h2>Welcome to the Pythagorean Triples Calculator</h2>
+                    <p>Discover the fascinating world of Pythagorean triples - sets of three positive integers that satisfy the Pythagorean theorem: a² + b² = c²</p>
+                </div>
+
+                <div class="features">
+                    <div class="feature-card" data-tab="find">
+                        <h3>🔍 Find Triples</h3>
+                        <p>Find all Pythagorean triples up to a specified limit using different algorithms.</p>
+                        <div class="btn">Get Started</div>
+                    </div>
+
+                    <div class="feature-card" data-tab="generate">
+                        <h3>🌱 Generate Primitives</h3>
+                        <p>Generate primitive Pythagorean triples using Euclid's formula.</p>
+                        <div class="btn">Generate</div>
+                    </div>
+
+                    <div class="feature-card" data-tab="check">
+                        <h3>✅ Check Triple</h3>
+                        <p>Verify if three numbers form a valid Pythagorean triple.</p>
+                        <div class="btn">Check Now</div>
+                    </div>
+
+                    <div class="feature-card" data-tab="compare">
+                        <h3>⚡ Compare Methods</h3>
+                        <p>Compare the performance of different algorithms for finding triples.</p>
+                        <div class="btn">Compare</div>
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <h3>About Pythagorean Triples</h3>
+                    <p>A Pythagorean triple consists of three positive integers a, b, and c, such that a² + b² = c². The smallest and most famous example is (3, 4, 5).</p>
+                    
+                    <h4>Types of Triples:</h4>
+                    <ul>
+                        <li><strong>Primitive:</strong> Triples where a, b, and c are coprime (e.g., 3, 4, 5)</li>
+                        <li><strong>Non-primitive:</strong> Multiples of primitive triples (e.g., 6, 8, 10)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Find Triples Tab -->
+            <div id="find" class="tab-content">
+                <div class="form-container">
+                    <h2>Find Pythagorean Triples</h2>
+                    
+                    <form id="findTriplesForm">
+                        <div class="form-group">
+                            <label for="limit">Maximum Hypotenuse Value:</label>
+                            <input type="number" id="limit" name="limit" min="1" max="10000" required value="100">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Method:</label>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="method" value="1" checked>
+                                    Brute Force
+                                </label>
+                                <label>
+                                    <input type="radio" name="method" value="2">
+                                    Euclid's Formula
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn">Find Triples</button>
+                    </form>
+
+                    <div id="findError" class="error"></div>
+                    <div id="findLoading" class="loading">
+                        <div class="spinner"></div>
+                        <p>Calculating triples...</p>
+                    </div>
+
+                    <div id="findResults" class="results" style="display: none;">
+                        <h3>Results</h3>
+                        <div class="result-summary">
+                            <p><strong>Method:</strong> <span id="methodName"></span></p>
+                            <p><strong>Limit:</strong> <span id="resultLimit"></span></p>
+                            <p><strong>Triples Found:</strong> <span id="triplesCount"></span></p>
+                            <p><strong>Execution Time:</strong> <span id="executionTime"></span> seconds</p>
+                        </div>
+
+                        <div id="triplesList" class="triples-list">
+                            <!-- Results will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generate Primitives Tab -->
+            <div id="generate" class="tab-content">
+                <div class="form-container">
+                    <h2>Generate Primitive Pythagorean Triples</h2>
+                    
+                    <form id="generateForm">
+                        <div class="form-group">
+                            <label for="count">Number of Primitive Triples to Generate:</label>
+                            <input type="number" id="count" name="count" min="1" max="100" required value="10">
+                        </div>
+
+                        <button type="submit" class="btn">Generate Triples</button>
+                    </form>
+
+                    <div id="generateError" class="error"></div>
+
+                    <div id="generateResults" class="results" style="display: none;">
+                        <h3>Results</h3>
+                        <p><strong>Generated <span id="generatedCount"></span> primitive Pythagorean triples:</strong></p>
+                        
+                        <div id="generateTriplesList" class="table-container">
+                            <!-- Results will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Check Triple Tab -->
+            <div id="check" class="tab-content">
+                <div class="form-container">
+                    <h2>Check Pythagorean Triple</h2>
+                    
+                    <form id="checkForm">
+                        <div class="form-group triple-inputs">
+                            <div>
+                                <label for="a">Side a:</label>
+                                <input type="number" id="a" name="a" min="1" required value="3">
+                            </div>
+                            <div>
+                                <label for="b">Side b:</label>
+                                <input type="number" id="b" name="b" min="1" required value="4">
+                            </div>
+                            <div>
+                                <label for="c">Hypotenuse c:</label>
+                                <input type="number" id="c" name="c" min="1" required value="5">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn">Check Triple</button>
+                    </form>
+
+                    <div id="checkError" class="error"></div>
+
+                    <div id="checkResults" class="results" style="display: none;">
+                        <h3>Result</h3>
+                        <div id="verification" class="verification">
+                            <!-- Result will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compare Methods Tab -->
+            <div id="compare" class="tab-content">
+                <div class="form-container">
+                    <h2>Compare Methods</h2>
+                    
+                    <form id="compareForm">
+                        <div class="form-group">
+                            <label for="compareLimit">Limit for Comparison:</label>
+                            <input type="number" id="compareLimit" name="compareLimit" min="1" max="10000" required value="100">
+                        </div>
+
+                        <button type="submit" class="btn">Compare Methods</button>
+                    </form>
+
+                    <div id="compareError" class="error"></div>
+                    <div id="compareLoading" class="loading">
+                        <div class="spinner"></div>
+                        <p>Comparing methods...</p>
+                    </div>
+
+                    <div id="compareResults" class="results" style="display: none;">
+                        <h3>Comparison Results</h3>
+                        <div id="comparisonResults">
+                            <!-- Results will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Pythagorean Triples Calculator</p>
+        </footer>
+    </div>
+
+    <script>
+        // Tab Navigation
+        document.querySelectorAll('.nav-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                
+                // Update active button
+                document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Show active tab
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Feature card navigation
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const tabId = card.getAttribute('data-tab');
+                
+                // Update active button
+                document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+                
+                // Show active tab
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Utility Functions
+        function gcd(a, b) {
+            return b === 0 ? a : gcd(b, a % b);
+        }
+
+        function showError(elementId, message) {
+            const errorDiv = document.getElementById(elementId);
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function hideError(elementId) {
+            document.getElementById(elementId).style.display = 'none';
+        }
+
+        function showLoading(elementId) {
+            document.getElementById(elementId).style.display = 'block';
+        }
+
+        function hideLoading(elementId) {
+            document.getElementById(elementId).style.display = 'none';
+        }
+
+        function showResults(elementId) {
+            document.getElementById(elementId).style.display = 'block';
+        }
+
+        function hideResults(elementId) {
+            document.getElementById(elementId).style.display = 'none';
+        }
+
+        // Find Triples Form
+        document.getElementById('findTriplesForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const limit = parseInt(document.getElementById('limit').value);
+            const method = document.querySelector('input[name="method"]:checked').value;
+            
+            if (isNaN(limit) || limit <= 0) {
+                showError('findError', 'Please enter a valid positive integer.');
+                return;
+            }
+
+            hideError('findError');
+            hideResults('findResults');
+            showLoading('findLoading');
+            
+            setTimeout(() => findTriples(limit, method), 100);
+        });
+
+        function findTriples(limit, method) {
+            try {
+                const startTime = performance.now();
+                const triples = calculateTriples(limit, method);
+                const endTime = performance.now();
+                const executionTime = (endTime - startTime) / 1000;
+                
+                displayFindResults(triples, limit, method, executionTime);
+            } catch (error) {
+                showError('findError', 'An error occurred during calculation: ' + error.message);
+            } finally {
+                hideLoading('findLoading');
+            }
+        }
+
+        function calculateTriples(limit, method) {
+            const triples = [];
+            
+            if (method === '1') {
+                // Brute Force method
+                for (let a = 1; a <= limit; a++) {
+                    for (let b = a; b <= limit; b++) {
+                        const cSquared = a * a + b * b;
+                        const c = Math.sqrt(cSquared);
+                        if (Number.isInteger(c) && c <= limit) {
+                            triples.push([a, b, parseInt(c)]);
+                        }
+                    }
+                }
+            } else {
+                // Euclid's Formula method
+                const maxM = Math.floor(Math.sqrt(limit)) + 1;
+                for (let m = 2; m < maxM; m++) {
+                    for (let n = 1; n < m; n++) {
+                        if (gcd(m, n) === 1 && (m % 2 === 0 || n % 2 === 0)) {
+                            const a = m * m - n * n;
+                            const b = 2 * m * n;
+                            const c = m * m + n * n;
+                            
+                            if (c <= limit) {
+                                triples.push([Math.min(a, b), Math.max(a, b), c]);
+                                
+                                // Add multiples
+                                let k = 2;
+                                while (k * c <= limit) {
+                                    triples.push([k * a, k * b, k * c]);
+                                    k++;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // Remove duplicates and sort
+                const uniqueTriples = Array.from(new Set(triples.map(JSON.stringify)), JSON.parse);
+                uniqueTriples.sort((x, y) => (x[2] - y[2]) || (x[0] - y[0]));
+                return uniqueTriples;
+            }
+            
+            return triples;
+        }
+
+        function displayFindResults(triples, limit, method, executionTime) {
+            const methodName = method === '1' ? 'Brute Force' : 'Euclid\'s Formula';
+            
+            document.getElementById('methodName').textContent = methodName;
+            document.getElementById('resultLimit').textContent = limit;
+            document.getElementById('triplesCount').textContent = triples.length;
+            document.getElementById('executionTime').textContent = executionTime.toFixed(4);
+            
+            const triplesList = document.getElementById('triplesList');
+            
+            if (triples.length > 0) {
+                const displayCount = Math.min(20, triples.length);
+                
+                let html = `<h4>First ${displayCount} Triples:</h4>`;
+                html += '<div class="table-container"><table>';
+                html += '<thead><tr><th>#</th><th>a</th><th>b</th><th>c</th><th>Verification</th></tr></thead><tbody>';
+                
+                for (let i = 0; i < displayCount; i++) {
+                    const [a, b, c] = triples[i];
+                    html += `<tr>
+                        <td>${i + 1}</td>
+                        <td>${a}</td>
+                        <td>${b}</td>
+                        <td>${c}</td>
+                        <td>${a}² + ${b}² = ${c}²</td>
+                    </tr>`;
+                }
+                
+                html += '</tbody></table></div>';
+                
+                if (triples.length > 20) {
+                    html += `<p class="more-results">... and ${triples.length - 20} more triples</p>`;
+                }
+                
+                triplesList.innerHTML = html;
+            } else {
+                triplesList.innerHTML = '<p class="no-results">No Pythagorean triples found within the specified limit.</p>';
+            }
+            
+            showResults('findResults');
+        }
+
+        // Generate Primitives Form
+        document.getElementById('generateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const count = parseInt(document.getElementById('count').value);
+            
+            if (isNaN(count) || count <= 0) {
+                showError('generateError', 'Please enter a valid positive integer.');
+                return;
+            }
+
+            hideError('generateError');
+            generatePrimitives(count);
+        });
+
+        function generatePrimitives(count) {
+            const triples = [];
+            let m = 2;
+            
+            while (triples.length < count) {
+                for (let n = 1; n < m; n++) {
+                    if (gcd(m, n) === 1 && (m % 2 === 0 || n % 2 === 0)) {
+                        const a = m * m - n * n;
+                        const b = 2 * m * n;
+                        const c = m * m + n * n;
+                        
+                        triples.push([Math.min(a, b), Math.max(a, b), c]);
+                        
+                        if (triples.length >= count) {
+                            break;
+                        }
+                    }
+                }
+                m++;
+            }
+            
+            displayGenerateResults(triples, count);
+        }
+
+        function displayGenerateResults(triples, count) {
+            document.getElementById('generatedCount').textContent = count;
+            
+            const triplesList = document.getElementById('generateTriplesList');
+            
+            let html = '<table>';
+            html += '<thead><tr><th>#</th><th>a</th><th>b</th><th>c</th><th>Verification</th></tr></thead><tbody>';
+            
+            for (let i = 0; i < triples.length; i++) {
+                const [a, b, c] = triples[i];
+                html += `<tr>
+                    <td>${i + 1}</td>
+                    <td>${a}</td>
+                    <td>${b}</td>
+                    <td>${c}</td>
+                    <td>${a}² + ${b}² = ${c}²</td>
+                </tr>`;
+            }
+            
+            html += '</tbody></table>';
+            triplesList.innerHTML = html;
+            
+            showResults('generateResults');
+        }
+
+        // Check Triple Form
+        document.getElementById('checkForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const a = parseInt(document.getElementById('a').value);
+            const b = parseInt(document.getElementById('b').value);
+            const c = parseInt(document.getElementById('c').value);
+            
+            if (isNaN(a) || isNaN(b) || isNaN(c) || a <= 0 || b <= 0 || c <= 0) {
+                showError('checkError', 'Please enter valid positive integers.');
+                return;
+            }
+
+            hideError('checkError');
+            checkTriple(a, b, c);
+        });
+
+        function checkTriple(a, b, c) {
+            const isTriple = (a * a + b * b === c * c);
+            const aSquared = a * a;
+            const bSquared = b * b;
+            const cSquared = c * c;
+            const sumAB = aSquared + bSquared;
+            
+            displayCheckResult(a, b, c, isTriple, aSquared, bSquared, cSquared, sumAB);
+        }
+
+        function displayCheckResult(a, b, c, isTriple, aSquared, bSquared, cSquared, sumAB) {
+            const verificationDiv = document.getElementById('verification');
+            
+            let html = '';
+            if (isTriple) {
+                html = `<h4>✓ (${a}, ${b}, ${c}) is a Pythagorean triple!</h4>`;
+                verificationDiv.className = 'verification valid';
+            } else {
+                html = `<h4>✗ (${a}, ${b}, ${c}) is NOT a Pythagorean triple</h4>`;
+                verificationDiv.className = 'verification invalid';
+            }
+            
+            html += `<div class="calculation">
+                <p><strong>Calculation:</strong></p>
+                <p>${a}² + ${b}² = ${aSquared} + ${bSquared} = ${sumAB}</p>
+                <p>${c}² = ${cSquared}</p>`;
+            
+            if (!isTriple) {
+                html += `<p><strong>Difference:</strong> ${Math.abs(sumAB - cSquared)}</p>`;
+            }
+            
+            html += '</div>';
+            
+            verificationDiv.innerHTML = html;
+            showResults('checkResults');
+        }
+
+        // Compare Methods Form
+        document.getElementById('compareForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const limit = parseInt(document.getElementById('compareLimit').value);
+            
+            if (isNaN(limit) || limit <= 0) {
+                showError('compareError', 'Please enter a valid positive integer.');
+                return;
+            }
+
+            hideError('compareError');
+            hideResults('compareResults');
+            showLoading('compareLoading');
+            
+            setTimeout(() => compareMethods(limit), 100);
+        });
+
+        function compareMethods(limit) {
+            try {
+                const startBF = performance.now();
+                const triplesBF = calculateBruteForce(limit);
+                const timeBF = (performance.now() - startBF) / 1000;
+                
+                const startEuclid = performance.now();
+                const triplesEuclid = calculateEuclid(limit);
+                const timeEuclid = (performance.now() - startEuclid) / 1000;
+                
+                displayComparison(limit, triplesBF.length, triplesEuclid.length, timeBF, timeEuclid);
+            } catch (error) {
+                showError('compareError', 'An error occurred during comparison: ' + error.message);
+            } finally {
+                hideLoading('compareLoading');
+            }
+        }
+
+        function calculateBruteForce(limit) {
+            const triples = [];
+            for (let a = 1; a <= limit; a++) {
+                for (let b = a; b <= limit; b++) {
+                    const cSquared = a * a + b * b;
+                    const c = Math.sqrt(cSquared);
+                    if (Number.isInteger(c) && c <= limit) {
+                        triples.push([a, b, parseInt(c)]);
+                    }
+                }
+            }
+            return triples;
+        }
+
+        function calculateEuclid(limit) {
+            const triples = [];
+            const maxM = Math.floor(Math.sqrt(limit)) + 1;
+            
+            for (let m = 2; m < maxM; m++) {
+                for (let n = 1; n < m; n++) {
+                    if (gcd(m, n) === 1 && (m % 2 === 0 || n % 2 === 0)) {
+                        const a = m * m - n * n;
+                        const b = 2 * m * n;
+                        const c = m * m + n * n;
+                        
+                        if (c <= limit) {
+                            triples.push([Math.min(a, b), Math.max(a, b), c]);
+                            
+                            let k = 2;
+                            while (k * c <= limit) {
+                                triples.push([k * a, k * b, k * c]);
+                                k++;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            const uniqueTriples = Array.from(new Set(triples.map(JSON.stringify)), JSON.parse);
+            uniqueTriples.sort((x, y) => (x[2] - y[2]) || (x[0] - y[0]));
+            return uniqueTriples;
+        }
+
+        function displayComparison(limit, countBF, countEuclid, timeBF, timeEuclid) {
+            const resultsDiv = document.getElementById('comparisonResults');
+            
+            let html = `<p><strong>Comparison Results for Limit = ${limit}</strong></p>`;
+            html += '<div class="comparison-grid">';
+            
+            html += `<div class="method-result">
+                <h4>Brute Force Method</h4>
+                <p><strong>Triples Found:</strong> ${countBF}</p>
+                <p><strong>Time:</strong> ${timeBF.toFixed(6)} seconds</p>
+            </div>`;
+            
+            html += `<div class="method-result">
+                <h4>Euclid's Formula</h4>
+                <p><strong>Triples Found:</strong> ${countEuclid}</p>
+                <p><strong>Time:</strong> ${timeEuclid.toFixed(6)} seconds</p>
+            </div>`;
+            
+            html += '</div>';
+            
+            const methodsMatch = countBF === countEuclid;
+            html += `<div class="verification-result ${methodsMatch ? 'valid' : 'invalid'}">`;
+            
+            if (methodsMatch) {
+                html += '<h4>✓ Both methods found the same number of triples</h4>';
+            } else {
+                html += '<h4>✗ Methods found different numbers of triples</h4>';
+                html += `<p>Brute Force: ${countBF} triples</p>`;
+                html += `<p>Euclid's Formula: ${countEuclid} triples</p>`;
+            }
+            
+            html += '</div>';
+            
+            resultsDiv.innerHTML = html;
+            showResults('compareResults');
+        }
+    </script>
+</body>
+</html>
